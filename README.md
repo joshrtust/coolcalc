@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/joshrtust/coolcalc.svg?style=svg)](https://circleci.com/gh/joshrtust/coolcalc)
+
 # Coolcalc
 
 This is a cool little calculator app, created with python and the tkinter library.
