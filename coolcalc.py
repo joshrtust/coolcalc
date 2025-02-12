@@ -16,25 +16,36 @@ entry.pack(pady=20)
 
 # Function to handle button clicks
 def on_click(button_text):
-    if button_text == "=":
+    if button_text == "=": # Equals
         try:
-            result = eval(entry.get())
+            expression = entry.get().replace("^", "**")  
+            result = eval(expression)
             entry.delete(0, "end")
             entry.insert("end", str(result))
         except:
             entry.delete(0, "end")
             entry.insert("end", "Error")
-    elif button_text == "C":
+    elif button_text == "C": # Clear
         entry.delete(0, "end")
+    elif button_text == "B": # Backspace
+        entry.delete(len(entry.get()) - 1, "end")
+    elif button_text == "+/-":  # Toggle negative sign
+        try:
+            value = float(entry.get())  # Convert to float
+            entry.delete(0, "end")
+            entry.insert("end", str(-value))  # Negate the number
+        except:
+            pass  # Ignore errors (e.g., if the field is empty)
     else:
         entry.insert("end", button_text)
 
 # Button layout
 buttons = [
-    "7", "8", "9", "/",
-    "4", "5", "6", "*",
-    "1", "2", "3", "-",
-    "C", "0", "=", "+"
+    "C", "B", "^", "/",  
+    "7", "8", "9", "*",  
+    "4", "5", "6", "-",  
+    "1", "2", "3", "+",  
+    "+/-", "0", ".", "="
 ]
 
 # Create button grid
@@ -43,7 +54,7 @@ button_frame.pack(pady=10, fill="both", expand=True)
 
 for i in range(4):
     button_frame.columnconfigure(i, weight=1)
-for i in range(4):
+for i in range(5):
     button_frame.rowconfigure(i, weight=1)
 
 for idx, text in enumerate(buttons):
