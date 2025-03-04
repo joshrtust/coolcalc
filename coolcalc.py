@@ -1,6 +1,35 @@
 # Cool calculator
 
 import customtkinter as ctk
+import ast
+import operator as op
+
+# Supported operators
+operators = {
+    ast.Add: op.add,
+    ast.Sub: op.sub,
+    ast.Mult: op.mul,
+    ast.Div: op.truediv,
+    ast.Pow: op.pow,
+    ast.BitXor: op.xor,
+    ast.USub: op.neg
+}
+
+def eval_expr(expr):
+    """
+    Safely evaluate a mathematical expression.
+    """
+    def _eval(node):
+        if isinstance(node, ast.Num):  # <number>
+            return node.n
+        elif isinstance(node, ast.BinOp):  # <left> <operator> <right>
+            return operators[type(node.op)](_eval(node.left), _eval(node.right))
+        elif isinstance(node, ast.UnaryOp):  # <operator> <operand> e.g., -1
+            return operators[type(node.op)](_eval(node.operand))
+        else:
+            raise TypeError(node)
+    
+    return _eval(ast.parse(expr, mode='eval').body)
 
 ctk.set_appearance_mode("system")
 ctk.set_default_color_theme("blue")
@@ -18,11 +47,11 @@ entry.pack(pady=20)
 def on_click(button_text):
     if button_text == "=": # Equals
         try:
-            expression = entry.get().replace("^", "**")  
-            result = eval(expression)
+            expression = entry.get().replace("^", "**")
+            result = eval_expr(expression)
             entry.delete(0, "end")
             entry.insert("end", str(result))
-        except:
+        except Exception as e:
             entry.delete(0, "end")
             entry.insert("end", "Error")
     elif button_text == "C": # Clear
